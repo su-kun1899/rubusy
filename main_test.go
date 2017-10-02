@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -16,5 +18,20 @@ func TestTargetTime_1985_01_07_07_07_00(t *testing.T) {
 	// assert
 	if actual != expected {
 		t.Fatalf("actual is differet from expected. expected: %q actual: %q\n", expected, actual)
+	}
+}
+
+func TestReadCrontabFile_crontab_example(t *testing.T) {
+	// setup
+	dir, _ := os.Getwd()
+	filename := dir + "/crontab_example"
+	expected := []string{"15 9 * * * /tmp/hoge.sh", "10 10 * * * /tmp/fuga.sh"}
+
+	// execute
+	actual := readCrontabFile(filename)
+
+	// assert
+	if !reflect.DeepEqual(actual, expected) {
+		t.Fatalf("expected: %q but actual: %q\n", expected, actual)
 	}
 }

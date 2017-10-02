@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"time"
@@ -24,4 +25,20 @@ func main() {
 
 func targetTime(t time.Time) string {
 	return t.Format("target time: 2006-01-02 15:04:05")
+}
+
+func readCrontabFile(fileName string) []string {
+	fp, err := os.Open(fileName)
+	if err != nil {
+		panic(err)
+	}
+	defer fp.Close()
+
+	lines := make([]string, 0)
+	scanner := bufio.NewScanner(fp)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+
+	return lines
 }
