@@ -24,7 +24,10 @@ func main() {
 }
 
 func targetTime(t time.Time) string {
-	return t.Format("target time: 2006-01-02 15:04:05")
+	const format = "2006-01-02 15:04:05"
+	from := t
+	to := t.Add(time.Duration(1) * time.Hour)
+	return fmt.Sprintf("target time from: %q to: %q", from.Format(format), to.Format(format))
 }
 
 func readCrontabFile(fileName string) []string {
