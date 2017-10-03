@@ -24,6 +24,7 @@ func main() {
 	app.Run(os.Args)
 }
 
+// 実行されるcronの検索範囲を保持する構造体
 type targetTime struct {
 	from time.Time
 	to   time.Time
@@ -42,6 +43,7 @@ func newTargetTime(t time.Time) targetTime {
 	return targetTime{from, to}
 }
 
+// crontab一行分の情報を保持する構造体
 type cronTask struct {
 	minute     string
 	hour       string
