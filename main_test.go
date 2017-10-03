@@ -67,3 +67,17 @@ func TestNewCrontab(t *testing.T) {
 		t.Fatalf("expected: %q but actual: %q\n", expected, actual)
 	}
 }
+
+// 10を含んでいる場合通る
+// * の場合通る
+// カンマ区切りの場合通る
+func TestFilterCronTask_Month(t *testing.T) {
+	// cronTask := cronTask{
+	// 	minute:     "32",
+	// 	hour:       "17",
+	// 	dayOfMonth: "3",
+	// 	month:      "10",
+	// 	dayOfWeek:  "Tue",
+	// 	line:       "32 17 3 10 Tue /tmp/hoge.sh",
+	// }
+}
