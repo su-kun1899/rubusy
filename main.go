@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/urfave/cli"
@@ -39,6 +40,27 @@ func newTargetTime(t time.Time) targetTime {
 	to := t.Add(time.Duration(1) * time.Hour)
 	// return fmt.Sprintf("target time from: %q to: %q", from.Format(format), to.Format(format))
 	return targetTime{from, to}
+}
+
+type cronTask struct {
+	minute     string
+	hour       string
+	dayOfMonth string
+	month      string
+	dayOfWeek  string
+	line       string
+}
+
+func newCronTask(line string) cronTask {
+	splited := strings.Split(line, " ")
+	return cronTask{
+		minute:     splited[0],
+		hour:       splited[1],
+		dayOfMonth: splited[2],
+		month:      splited[3],
+		dayOfWeek:  splited[4],
+		line:       line,
+	}
 }
 
 func readCrontabFile(fileName string) []string {

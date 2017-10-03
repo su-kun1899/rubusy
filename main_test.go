@@ -39,9 +39,29 @@ func TestNewTargetTime_1985_01_07_07_07_00(t *testing.T) {
 }
 
 func TestStringTargetTime(t *testing.T) {
-	target := targetTime{time.Date(1985, 1, 7, 7, 7, 5, 0, time.UTC), time.Date(2017, 10, 3, 17, 18, 9, 0, time.UTC)}
+	target := targetTime{
+		time.Date(1985, 1, 7, 7, 7, 5, 0, time.UTC),
+		time.Date(2017, 10, 3, 17, 18, 9, 0, time.UTC),
+	}
 	expected := "from: 1985-01-07 07:07:05, to: 2017-10-03 17:18:09"
 	actual := target.String()
+
+	if actual != expected {
+		t.Fatalf("expected: %q but actual: %q\n", expected, actual)
+	}
+}
+func TestNewCrontab(t *testing.T) {
+	crontabLine := "32 17 3 10 Tue /tmp/hoge.sh"
+	expected := cronTask{
+		minute:     "32",
+		hour:       "17",
+		dayOfMonth: "3",
+		month:      "10",
+		dayOfWeek:  "Tue",
+		line:       crontabLine,
+	}
+
+	actual := newCronTask(crontabLine)
 
 	if actual != expected {
 		t.Fatalf("expected: %q but actual: %q\n", expected, actual)
