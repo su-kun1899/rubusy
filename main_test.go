@@ -95,6 +95,30 @@ func TestFilterCronTask_match_october(t *testing.T) {
 	}
 }
 
+func TestFilterCronTask_match_every_month(t *testing.T) {
+	// setup
+	targetTime := targetTime{
+		time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
+	cron := cronTask{
+		minute:     "30",
+		hour:       "*",
+		dayOfMonth: "*",
+		month:      "*",
+		dayOfWeek:  "*",
+		line:       "30 * * 10 * /tmp/hoge.sh",
+	}
+
+	ok, actual := filterCronTask(&cron, &targetTime)
+	if !ok {
+		t.Fatalf("crontTask should match filter condition: %q \n", cron)
+	}
+	if actual != &cron {
+		t.Fatalf("actual should match cronTask: %q \n", cron)
+	}
+}
+
 func TestFilterCronTask_non_match_november(t *testing.T) {
 	// setup
 	targetTime := targetTime{
