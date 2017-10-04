@@ -16,8 +16,20 @@ func main() {
 	app.Name = "rubusy"
 	app.Usage = "tell you which cron will be executed."
 	app.Action = func(c *cli.Context) error {
-		fmt.Printf("Hello %s\n", c.Args().Get(0))
-		fmt.Println(newTargetTime(time.Now()))
+		fileName := c.Args().Get(0)
+		timeCondition := newTargetTime(time.Now())
+		fmt.Println(timeCondition)
+		tasks := searchCronTasks(fileName, &timeCondition)
+
+		if len(tasks) == 0 {
+			fmt.Println("Probably nothing to do. no cron tasks.")
+			return nil
+		}
+		for _, task := range tasks {
+			// TODO 行番号出して上げてもいいかも
+			fmt.Printf("%s\n", task.line)
+		}
+		fmt.Printf("Probably %d cron tasks will run.\n", len(tasks))
 
 		return nil
 	}
