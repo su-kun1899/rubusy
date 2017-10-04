@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -79,4 +80,18 @@ func readCrontabFile(fileName string) []string {
 	}
 
 	return lines
+}
+
+func filterCronTask(task *cronTask, target *targetTime) (bool, *cronTask) {
+	if task.month == "*" {
+		return true, task
+	}
+	intMonth, _ := strconv.Atoi(task.month)
+	numFrom, _ := strconv.Atoi(target.from.Format("1"))
+	numTo, _ := strconv.Atoi(target.to.Format("1"))
+	if !(numFrom <= intMonth && intMonth <= numTo) {
+		return false, nil
+	}
+
+	return true, task
 }

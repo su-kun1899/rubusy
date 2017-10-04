@@ -71,13 +71,50 @@ func TestNewCrontab(t *testing.T) {
 // 10を含んでいる場合通る
 // * の場合通る
 // カンマ区切りの場合通る
-func TestFilterCronTask_Month(t *testing.T) {
-	// cronTask := cronTask{
-	// 	minute:     "32",
-	// 	hour:       "17",
-	// 	dayOfMonth: "3",
-	// 	month:      "10",
-	// 	dayOfWeek:  "Tue",
-	// 	line:       "32 17 3 10 Tue /tmp/hoge.sh",
-	// }
+func TestFilterCronTask_match_october(t *testing.T) {
+	// setup
+	targetTime := targetTime{
+		time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
+	cron := cronTask{
+		minute:     "30",
+		hour:       "*",
+		dayOfMonth: "*",
+		month:      "10",
+		dayOfWeek:  "*",
+		line:       "30 * * 10 * /tmp/hoge.sh",
+	}
+
+	ok, actual := filterCronTask(&cron, &targetTime)
+	if !ok {
+		t.Fatalf("crontTask should match filter condition: %q \n", cron)
+	}
+	if actual != &cron {
+		t.Fatalf("actual should match cronTask: %q \n", cron)
+	}
+}
+
+func TestFilterCronTask_non_match_november(t *testing.T) {
+	// setup
+	targetTime := targetTime{
+		time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
+	cron := cronTask{
+		minute:     "30",
+		hour:       "*",
+		dayOfMonth: "*",
+		month:      "11",
+		dayOfWeek:  "*",
+		line:       "30 * * 11 * /tmp/hoge.sh",
+	}
+
+	ok, actual := filterCronTask(&cron, &targetTime)
+	if ok {
+		t.Fatalf("crontTask should not match filter condition: %q \n", cron)
+	}
+	if actual != nil {
+		t.Fatal("actual should return nil \n")
+	}
 }
