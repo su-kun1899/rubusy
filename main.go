@@ -66,31 +66,44 @@ func newCronTask(line string) cronTask {
 	}
 }
 
-func readCrontabFile(fileName string) []string {
+func readCrontabFile(fileName string, t *targetTime) []cronTask {
 	fp, err := os.Open(fileName)
 	if err != nil {
 		panic(err)
 	}
 	defer fp.Close()
 
-	lines := make([]string, 0)
+	tasks := make([]cronTask, 0)
 	scanner := bufio.NewScanner(fp)
 	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
+		task := newCronTask(scanner.Text())
+		if ok, _ := filterCronTask(&task, t); ok {
+			tasks = append(tasks, task)
+		}
 	}
 
-	return lines
+	return tasks
 }
 
 func filterCronTask(task *cronTask, target *targetTime) (bool, *cronTask) {
-	if task.month == "*" {
-		return true, task
+	// month
+	if task.month != "*" {
+		intMonth, _ := strconv.Atoi(task.month)
+		numFrom, _ := strconv.Atoi(target.from.Format("1"))
+		numTo, _ := strconv.Atoi(target.to.Format("1"))
+		if !(numFrom <= intMonth && intMonth <= numTo) {
+			return false, nil
+		}
 	}
-	intMonth, _ := strconv.Atoi(task.month)
-	numFrom, _ := strconv.Atoi(target.from.Format("1"))
-	numTo, _ := strconv.Atoi(target.to.Format("1"))
-	if !(numFrom <= intMonth && intMonth <= numTo) {
-		return false, nil
+
+	// day of month
+	if task.dayOfMonth != "*" {
+		intDayOfMonth, _ := strconv.Atoi(task.dayOfMonth)
+		//numFrom, _ := strconv.Atoi(target.from.Format("1"))
+		//numTo, _ := strconv.Atoi(target.to.Format("1"))
+		if !(target.from.Day() <= intDayOfMonth && intDayOfMonth <= target.to.Day()) {
+			return false, nil
+		}
 	}
 
 	return true, task

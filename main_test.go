@@ -11,10 +11,17 @@ func TestReadCrontabFile_crontab_example(t *testing.T) {
 	// setup
 	dir, _ := os.Getwd()
 	filename := dir + "/crontab_example"
-	expected := []string{"15 9 * * * /tmp/hoge.sh", "10 10 * * * /tmp/fuga.sh"}
+	expected := []cronTask{
+		newCronTask("15 9 * * * /tmp/hoge.sh"),
+		newCronTask("10 10 * * * /tmp/fuga.sh"),
+	}
+	targetTime := targetTime{
+		time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
 
 	// execute
-	actual := readCrontabFile(filename)
+	actual := readCrontabFile(filename, &targetTime)
 
 	// assert
 	if !reflect.DeepEqual(actual, expected) {
@@ -130,6 +137,77 @@ func TestFilterCronTask_non_match_november(t *testing.T) {
 		hour:       "*",
 		dayOfMonth: "*",
 		month:      "11",
+		dayOfWeek:  "*",
+		line:       "30 * * 11 * /tmp/hoge.sh",
+	}
+
+	ok, actual := filterCronTask(&cron, &targetTime)
+	if ok {
+		t.Fatalf("crontTask should not match filter condition: %q \n", cron)
+	}
+	if actual != nil {
+		t.Fatal("actual should return nil \n")
+	}
+}
+
+func TestFilterCronTask_match_every_day(t *testing.T) {
+	// setup
+	targetTime := targetTime{
+		time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
+	cron := cronTask{
+		minute:     "30",
+		hour:       "*",
+		dayOfMonth: "*",
+		month:      "*",
+		dayOfWeek:  "*",
+		line:       "30 * * 10 * /tmp/hoge.sh",
+	}
+
+	ok, actual := filterCronTask(&cron, &targetTime)
+	if !ok {
+		t.Fatalf("crontTask should match filter condition: %q \n", cron)
+	}
+	if actual != &cron {
+		t.Fatalf("actual should match cronTask: %q \n", cron)
+	}
+}
+
+func TestFilterCronTask_match_day4(t *testing.T) {
+	// setup
+	targetTime := targetTime{
+		time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
+	cron := cronTask{
+		minute:     "30",
+		hour:       "*",
+		dayOfMonth: "4",
+		month:      "10",
+		dayOfWeek:  "*",
+		line:       "30 * * 10 * /tmp/hoge.sh",
+	}
+
+	ok, actual := filterCronTask(&cron, &targetTime)
+	if !ok {
+		t.Fatalf("crontTask should match filter condition: %q \n", cron)
+	}
+	if actual != &cron {
+		t.Fatalf("actual should match cronTask: %q \n", cron)
+	}
+}
+func TestFilterCronTask_non_match_day5(t *testing.T) {
+	// setup
+	targetTime := targetTime{
+		time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
+	cron := cronTask{
+		minute:     "30",
+		hour:       "*",
+		dayOfMonth: "5",
+		month:      "10",
 		dayOfWeek:  "*",
 		line:       "30 * * 11 * /tmp/hoge.sh",
 	}
