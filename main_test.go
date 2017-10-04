@@ -21,7 +21,7 @@ func TestReadCrontabFile_crontab_example(t *testing.T) {
 	}
 
 	// execute
-	actual := readCrontabFile(filename, &targetTime)
+	actual := searchCronTasks(filename, &targetTime)
 
 	// assert
 	if !reflect.DeepEqual(actual, expected) {

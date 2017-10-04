@@ -16,7 +16,7 @@ func main() {
 	app.Name = "rubusy"
 	app.Usage = "tell you which cron will be executed."
 	app.Action = func(c *cli.Context) error {
-		// fmt.Printf("Hello %s\n", c.Args().Get(0))
+		fmt.Printf("Hello %s\n", c.Args().Get(0))
 		fmt.Println(newTargetTime(time.Now()))
 
 		return nil
@@ -66,7 +66,7 @@ func newCronTask(line string) cronTask {
 	}
 }
 
-func readCrontabFile(fileName string, t *targetTime) []cronTask {
+func searchCronTasks(fileName string, t *targetTime) []cronTask {
 	fp, err := os.Open(fileName)
 	if err != nil {
 		panic(err)
