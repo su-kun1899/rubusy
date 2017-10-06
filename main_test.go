@@ -15,6 +15,7 @@ func TestReadCrontabFile_crontab_example(t *testing.T) {
 		newCronTask("15 9 * * * /tmp/hoge.sh"),
 		newCronTask("10 10 * * * /tmp/fuga.sh"),
 	}
+
 	targetTime := targetTime{
 		time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
 		time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
@@ -218,5 +219,22 @@ func TestFilterCronTask_non_match_day5(t *testing.T) {
 	}
 	if actual != nil {
 		t.Fatal("actual should return nil \n")
+	}
+}
+
+func TestSearchCronTasks(t *testing.T) {
+	// given
+	dir, _ := os.Getwd()
+	testFile := dir + "/crontab_unmatch"
+	targetTime := targetTime{
+		time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
+
+	// when
+	actual := searchCronTasks(testFile, &targetTime)
+
+	if len(actual) != 0 {
+		t.Fatal("actual should return empty slice \n")
 	}
 }

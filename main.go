@@ -88,7 +88,11 @@ func searchCronTasks(fileName string, t *targetTime) []cronTask {
 	tasks := make([]cronTask, 0)
 	scanner := bufio.NewScanner(fp)
 	for scanner.Scan() {
-		task := newCronTask(scanner.Text())
+		line := scanner.Text()
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		task := newCronTask(line)
 		if ok, _ := filterCronTask(&task, t); ok {
 			tasks = append(tasks, task)
 		}
