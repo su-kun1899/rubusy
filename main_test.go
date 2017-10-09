@@ -247,6 +247,7 @@ func TestFilterCronTask_match(t *testing.T) {
 	cronTasks := []cronTask{
 		newCronTask("30 * * * * /tmp/hoge.sh"),
 		newCronTask("30 * * 10 * /tmp/hoge.sh"),
+		newCronTask("30 * * 9,10,11 * /tmp/hoge.sh"),
 	}
 
 	for _, task := range cronTasks {
@@ -267,6 +268,7 @@ func TestFilterCronTask_unmatch(t *testing.T) {
 	}
 	cronTasks := []cronTask{
 		newCronTask("30 * * 11 * /tmp/hoge.sh"),
+		newCronTask("30 * * 8,9,12 * /tmp/hoge.sh"),
 	}
 
 	for _, task := range cronTasks {

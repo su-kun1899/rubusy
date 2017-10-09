@@ -103,7 +103,22 @@ func searchCronTasks(fileName string, t *targetTime) []cronTask {
 
 func filterCronTask(task *cronTask, target *targetTime) (bool, *cronTask) {
 	// month
-	if task.month != "*" {
+	if strings.Contains(task.month, ",") {
+		months := strings.Split(task.month, ",")
+		numFrom, _ := strconv.Atoi(target.from.Format("1"))
+		numTo, _ := strconv.Atoi(target.to.Format("1"))
+		match := false
+		for _, taskMonth := range months {
+			intMonth, _ := strconv.Atoi(taskMonth)
+			if numFrom <= intMonth && intMonth <= numTo {
+				match = true
+				break
+			}
+		}
+		if !match {
+			return false, nil
+		}
+	} else if task.month != "*" {
 		intMonth, _ := strconv.Atoi(task.month)
 		numFrom, _ := strconv.Atoi(target.from.Format("1"))
 		numTo, _ := strconv.Atoi(target.to.Format("1"))
