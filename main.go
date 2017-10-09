@@ -131,6 +131,14 @@ func matchMonth(task *cronTask, target *targetTime) bool {
 	var months []string
 	if strings.Contains(task.month, ",") {
 		months = strings.Split(task.month, ",")
+	} else if strings.Contains(task.month, "-") {
+		monthSplited := strings.Split(task.month, "-")
+		startMonth, _ := strconv.Atoi(monthSplited[0])
+		endMonth, _ := strconv.Atoi(monthSplited[1])
+		months = make([]string, 0)
+		for i := startMonth; i <= endMonth; i++ {
+			months = append(months, fmt.Sprint(i))
+		}
 	} else {
 		months = []string{task.month}
 	}
