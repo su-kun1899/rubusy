@@ -121,21 +121,37 @@ func filterCronTask(task *cronTask, target *targetTime) (bool, *cronTask) {
 }
 
 func matchMonth(task *cronTask, target *targetTime) bool {
-	if task.month == "*" {
-		return true
+	var taskMonth string
+	// var cycle int
+	if strings.Contains(task.month, "/") {
+		monthSplited := strings.Split(taskMonth, "/")
+		taskMonth = monthSplited[0]
+		// cycle, _ = strconv.Atoi(monthSplited[1])
+	} else {
+		taskMonth = task.month
 	}
 
 	numFrom, _ := strconv.Atoi(target.from.Format("1"))
 	numTo, _ := strconv.Atoi(target.to.Format("1"))
 
 	var months []string
-	if strings.Contains(task.month, ",") {
-		months = strings.Split(task.month, ",")
-	} else if strings.Contains(task.month, "-") {
-		months = monthRange(task.month)
+	if taskMonth == "*" {
+		for i := 0; i < 12; i++ {
+			months = append(months, fmt.Sprint(i+1))
+		}
+	} else if strings.Contains(taskMonth, ",") {
+		months = strings.Split(taskMonth, ",")
+	} else if strings.Contains(taskMonth, "-") {
+		months = monthRange(taskMonth)
 	} else {
-		months = []string{task.month}
+		startMonth, _ := strconv.Atoi(taskMonth)
+		endMonth := 12
+		months = make([]string, 0)
+		for i := startMonth; i <= endMonth; i++ {
+			months = append(months, fmt.Sprint(i))
+		}
 	}
+
 	for _, taskMonth := range months {
 		intMonth, _ := strconv.Atoi(taskMonth)
 		if numFrom <= intMonth && intMonth <= numTo {
