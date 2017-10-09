@@ -222,7 +222,7 @@ func TestFilterCronTask_non_match_day5(t *testing.T) {
 	}
 }
 
-func TestSearchCronTasks(t *testing.T) {
+func TestSearchCronTasks_unmatch(t *testing.T) {
 	// given
 	dir, _ := os.Getwd()
 	testFile := dir + "/crontab_unmatch"
