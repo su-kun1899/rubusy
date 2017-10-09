@@ -103,28 +103,8 @@ func searchCronTasks(fileName string, t *targetTime) []cronTask {
 
 func filterCronTask(task *cronTask, target *targetTime) (bool, *cronTask) {
 	// month
-	if strings.Contains(task.month, ",") {
-		months := strings.Split(task.month, ",")
-		numFrom, _ := strconv.Atoi(target.from.Format("1"))
-		numTo, _ := strconv.Atoi(target.to.Format("1"))
-		match := false
-		for _, taskMonth := range months {
-			intMonth, _ := strconv.Atoi(taskMonth)
-			if numFrom <= intMonth && intMonth <= numTo {
-				match = true
-				break
-			}
-		}
-		if !match {
-			return false, nil
-		}
-	} else if task.month != "*" {
-		intMonth, _ := strconv.Atoi(task.month)
-		numFrom, _ := strconv.Atoi(target.from.Format("1"))
-		numTo, _ := strconv.Atoi(target.to.Format("1"))
-		if !(numFrom <= intMonth && intMonth <= numTo) {
-			return false, nil
-		}
+	if !matchMonth(task, target) {
+		return false, nil
 	}
 
 	// day of month
@@ -138,4 +118,33 @@ func filterCronTask(task *cronTask, target *targetTime) (bool, *cronTask) {
 	}
 
 	return true, task
+}
+
+func matchMonth(task *cronTask, target *targetTime) bool {
+	// month
+	if strings.Contains(task.month, ",") {
+		months := strings.Split(task.month, ",")
+		numFrom, _ := strconv.Atoi(target.from.Format("1"))
+		numTo, _ := strconv.Atoi(target.to.Format("1"))
+		match := false
+		for _, taskMonth := range months {
+			intMonth, _ := strconv.Atoi(taskMonth)
+			if numFrom <= intMonth && intMonth <= numTo {
+				match = true
+				break
+			}
+		}
+		if !match {
+			return false
+		}
+	} else if task.month != "*" {
+		intMonth, _ := strconv.Atoi(task.month)
+		numFrom, _ := strconv.Atoi(target.from.Format("1"))
+		numTo, _ := strconv.Atoi(target.to.Format("1"))
+		if !(numFrom <= intMonth && intMonth <= numTo) {
+			return false
+		}
+	}
+
+	return true
 }
