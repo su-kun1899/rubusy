@@ -246,6 +246,7 @@ func TestFilterCronTask_match(t *testing.T) {
 	}
 	cronTasks := []cronTask{
 		newCronTask("30 * * * * /tmp/hoge.sh"),
+		newCronTask("30 * * 10 * /tmp/hoge.sh"),
 	}
 
 	for _, task := range cronTasks {
@@ -260,5 +261,21 @@ func TestFilterCronTask_match(t *testing.T) {
 }
 
 func TestFilterCronTask_unmatch(t *testing.T) {
+	targetTime := targetTime{
+		from: time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		to:   time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
+	cronTasks := []cronTask{
+		newCronTask("30 * * 11 * /tmp/hoge.sh"),
+	}
 
+	for _, task := range cronTasks {
+		ok, actual := filterCronTask(&task, &targetTime)
+		if ok {
+			t.Fatalf("crontTask should not match filter condition: %q \n", task)
+		}
+		if actual != nil {
+			t.Fatal("actual should return nil \n")
+		}
+	}
 }
