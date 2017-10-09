@@ -238,3 +238,27 @@ func TestSearchCronTasks_unmatch(t *testing.T) {
 		t.Fatal("actual should return empty slice \n")
 	}
 }
+
+func TestFilterCronTask_match(t *testing.T) {
+	targetTime := targetTime{
+		from: time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+		to:   time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+	}
+	cronTasks := []cronTask{
+		newCronTask("30 * * * * /tmp/hoge.sh"),
+	}
+
+	for _, task := range cronTasks {
+		ok, actual := filterCronTask(&task, &targetTime)
+		if !ok {
+			t.Fatalf("crontTask should match filter condition: %q \n", task)
+		}
+		if actual != &task {
+			t.Fatalf("actual should match cronTask: %q \n", task)
+		}
+	}
+}
+
+func TestFilterCronTask_unmatch(t *testing.T) {
+
+}
