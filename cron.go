@@ -23,48 +23,8 @@ func NewCronJob(job string) CronJob {
 	// monthBlock := splited[3]
 	// dayOfWeekBlock := splited[4]
 
-	var cycle int
-	if strings.Contains(minuteBlock, "/") {
-		splited := strings.Split(minuteBlock, "/")
-		minuteBlock = splited[0]
-		cycle, _ = strconv.Atoi(splited[1])
-	}
-
-	var minuteRange []int
-	if minuteBlock == "*" {
-		minuteRange = MinutesRange.all
-
-	} else if strings.Contains(minuteBlock, ",") {
-		minuteStrs := strings.Split(minuteBlock, ",")
-		minuteRange = make([]int, 0, len(minuteStrs))
-		for _, minuteStr := range minuteStrs {
-			minute, _ := strconv.Atoi(minuteStr)
-			minuteRange = append(minuteRange, minute)
-		}
-
-	} else if strings.Contains(minuteBlock, "-") {
-		minuteStrs := strings.Split(minuteBlock, "-")
-		start, _ := strconv.Atoi(minuteStrs[0])
-		end, _ := strconv.Atoi(minuteStrs[1])
-		minuteRange = newCronRange(start, end).all
-
-	} else {
-		minute, _ := strconv.Atoi(minuteBlock)
-		minuteRange = []int{minute}
-	}
-
-	if cycle != 0 {
-		cycles := make([]int, 0)
-		for index, minute := range minuteRange {
-			if index%cycle == 0 {
-				cycles = append(cycles, minute)
-			}
-		}
-		minuteRange = cycles
-	}
-
 	return CronJob{
-		minute:     minuteRange,
+		minute:     parse(minuteBlock, MinutesRange),
 		hour:       []int{17},
 		dayOfMonth: []int{3},
 		month:      []int{10},
@@ -90,3 +50,48 @@ func newCronRange(from int, to int) CronRange {
 }
 
 var MinutesRange = newCronRange(0, 59)
+
+func parse(block string, maxRange CronRange) []int {
+	var cycle int
+	if strings.Contains(block, "/") {
+		splited := strings.Split(block, "/")
+		block = splited[0]
+		cycle, _ = strconv.Atoi(splited[1])
+	}
+
+	var blockRange []int
+	if block == "*" {
+		blockRange = maxRange.all
+
+	} else if strings.Contains(block, ",") {
+		splited := strings.Split(block, ",")
+		blockRange = make([]int, 0, len(splited))
+		for _, s := range splited {
+			item, _ := strconv.Atoi(s)
+			blockRange = append(blockRange, item)
+		}
+
+	} else if strings.Contains(block, "-") {
+		splited := strings.Split(block, "-")
+		start, _ := strconv.Atoi(splited[0])
+		end, _ := strconv.Atoi(splited[1])
+		blockRange = newCronRange(start, end).all
+
+	} else {
+		item, _ := strconv.Atoi(block)
+		blockRange = []int{item}
+	}
+
+	// `/`を含んでいる場合は、skipする要素を除外して詰め直し
+	if cycle != 0 {
+		cycles := make([]int, 0)
+		for index, item := range blockRange {
+			if index%cycle == 0 {
+				cycles = append(cycles, item)
+			}
+		}
+		blockRange = cycles
+	}
+
+	return blockRange
+}
