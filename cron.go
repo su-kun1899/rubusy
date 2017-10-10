@@ -1,5 +1,10 @@
 package main
 
+import (
+	"strconv"
+	"strings"
+)
+
 type CronJob struct {
 	minute     []int
 	hour       []int
@@ -11,8 +16,23 @@ type CronJob struct {
 
 // NewCronJob creates CronJob from crontab line
 func NewCronJob(job string) CronJob {
+	splited := strings.Split(job, " ")
+	minuteBlock := splited[0]
+	// hourBlock := splited[1]
+	// dayOfMonthBlock := splited[2]
+	// monthBlock := splited[3]
+	// dayOfWeekBlock := splited[4]
+
+	var minuteRange []int
+	if strings.Contains(minuteBlock, "*") {
+		minuteRange = MinutesRange.all
+	} else {
+		minute, _ := strconv.Atoi(minuteBlock)
+		minuteRange = []int{minute}
+	}
+
 	return CronJob{
-		minute:     []int{32},
+		minute:     minuteRange,
 		hour:       []int{17},
 		dayOfMonth: []int{3},
 		month:      []int{10},
@@ -24,13 +44,17 @@ func NewCronJob(job string) CronJob {
 type CronRange struct {
 	from int
 	to   int
+	all  []int
 }
 
-func (r CronRange) parse() []int {
-	ret := make([]int, 0, r.to-r.from+1)
+func newCronRange(from int, to int) CronRange {
+	r := CronRange{from: from, to: to}
+	all := make([]int, 0, r.to-r.from+1)
 	for index := r.from; index <= r.to; index++ {
-		ret = append(ret, index)
+		all = append(all, index)
 	}
-
-	return ret
+	r.all = all
+	return r
 }
+
+var MinutesRange = newCronRange(0, 59)
