@@ -20,3 +20,17 @@ func NewCronJob(job string) CronJob {
 		line:       job,
 	}
 }
+
+type CronRange struct {
+	from int
+	to   int
+}
+
+func (r CronRange) parse() []int {
+	ret := make([]int, 0, r.to-r.from+1)
+	for index := r.from; index <= r.to; index++ {
+		ret = append(ret, index)
+	}
+
+	return ret
+}
