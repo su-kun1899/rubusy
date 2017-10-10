@@ -14,21 +14,27 @@ type CronJob struct {
 	line       string
 }
 
+var minutesRange = newCronRange(0, 59)
+var hourRange = newCronRange(0, 23)
+var dayOfMonthRange = newCronRange(1, 31)
+var monthRange = newCronRange(1, 12)
+var dayOfWeekRange = newCronRange(0, 7)
+
 // NewCronJob creates CronJob from crontab line
 func NewCronJob(job string) CronJob {
 	splited := strings.Split(job, " ")
 	minuteBlock := splited[0]
 	hourBlock := splited[1]
-	// dayOfMonthBlock := splited[2]
-	// monthBlock := splited[3]
-	// dayOfWeekBlock := splited[4]
+	dayOfMonthBlock := splited[2]
+	monthBlock := splited[3]
+	dayOfWeekBlock := splited[4]
 
 	return CronJob{
-		minute:     parse(minuteBlock, MinutesRange),
-		hour:       parse(hourBlock, HourRange),
-		dayOfMonth: []int{3},
-		month:      []int{10},
-		dayOfWeek:  []int{2},
+		minute:     parse(minuteBlock, minutesRange),
+		hour:       parse(hourBlock, hourRange),
+		dayOfMonth: parse(dayOfMonthBlock, dayOfMonthRange),
+		month:      parse(monthBlock, monthRange),
+		dayOfWeek:  parse(dayOfWeekBlock, dayOfWeekRange),
 		line:       job,
 	}
 }
@@ -48,9 +54,6 @@ func newCronRange(from int, to int) CronRange {
 	r.all = all
 	return r
 }
-
-var MinutesRange = newCronRange(0, 59)
-var HourRange = newCronRange(0, 23)
 
 func parse(block string, maxRange CronRange) []int {
 	var cycle int
