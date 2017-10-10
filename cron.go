@@ -29,6 +29,8 @@ func NewCronJob(job string) CronJob {
 	monthBlock := splited[3]
 	dayOfWeekBlock := splited[4]
 
+	// TODO 曜日は文字列表現の場合がある mon,tue,etc..
+
 	return CronJob{
 		minute:     parse(minuteBlock, minutesRange),
 		hour:       parse(hourBlock, hourRange),
@@ -86,16 +88,21 @@ func parse(block string, maxRange CronRange) []int {
 		blockRange = []int{item}
 	}
 
-	// `/`を含んでいる場合は、skipする要素を除外して詰め直し
-	if cycle != 0 {
-		cycles := make([]int, 0)
-		for index, item := range blockRange {
-			if index%cycle == 0 {
-				cycles = append(cycles, item)
-			}
-		}
-		blockRange = cycles
+	if cycle == 0 {
+		return blockRange
 	}
 
-	return blockRange
+	// `/`を含んでいる場合は、skipする要素を除外して詰め直し
+	if len(blockRange) == 1 {
+		// `/` の前に指定されてるのが1要素の場合、始点としてあつかう
+		blockRange = newCronRange(blockRange[0], maxRange.to).all
+	}
+	cycles := make([]int, 0)
+	for index, item := range blockRange {
+		if index%cycle == 0 {
+			cycles = append(cycles, item)
+		}
+	}
+
+	return cycles
 }
