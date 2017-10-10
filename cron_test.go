@@ -7,6 +7,7 @@ func TestNewCronJob(t *testing.T) {
 	jobs := []CronJob{
 		{line: "32 17 3 10 2 /tmp/hoge.sh", minute: []int{32}, hour: []int{17}, dayOfMonth: []int{3}, month: []int{10}, dayOfWeek: []int{2}},
 		{line: "* 17 3 10 2 /tmp/hoge.sh", minute: MinutesRange.all, hour: []int{17}, dayOfMonth: []int{3}, month: []int{10}, dayOfWeek: []int{2}},
+		{line: "1,2,3 17 3 10 2 /tmp/hoge.sh", minute: []int{1, 2, 3}, hour: []int{17}, dayOfMonth: []int{3}, month: []int{10}, dayOfWeek: []int{2}},
 	}
 
 	for _, expected := range jobs {

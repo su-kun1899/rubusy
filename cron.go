@@ -24,8 +24,17 @@ func NewCronJob(job string) CronJob {
 	// dayOfWeekBlock := splited[4]
 
 	var minuteRange []int
-	if strings.Contains(minuteBlock, "*") {
+	if minuteBlock == "*" {
 		minuteRange = MinutesRange.all
+
+	} else if strings.Contains(minuteBlock, ",") {
+		minuteStrs := strings.Split(minuteBlock, ",")
+		minuteRange = make([]int, 0, len(minuteStrs))
+		for _, minuteStr := range minuteStrs {
+			minute, _ := strconv.Atoi(minuteStr)
+			minuteRange = append(minuteRange, minute)
+		}
+
 	} else {
 		minute, _ := strconv.Atoi(minuteBlock)
 		minuteRange = []int{minute}
