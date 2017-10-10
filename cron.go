@@ -18,14 +18,14 @@ type CronJob struct {
 func NewCronJob(job string) CronJob {
 	splited := strings.Split(job, " ")
 	minuteBlock := splited[0]
-	// hourBlock := splited[1]
+	hourBlock := splited[1]
 	// dayOfMonthBlock := splited[2]
 	// monthBlock := splited[3]
 	// dayOfWeekBlock := splited[4]
 
 	return CronJob{
 		minute:     parse(minuteBlock, MinutesRange),
-		hour:       []int{17},
+		hour:       parse(hourBlock, HourRange),
 		dayOfMonth: []int{3},
 		month:      []int{10},
 		dayOfWeek:  []int{2},
@@ -50,6 +50,7 @@ func newCronRange(from int, to int) CronRange {
 }
 
 var MinutesRange = newCronRange(0, 59)
+var HourRange = newCronRange(0, 23)
 
 func parse(block string, maxRange CronRange) []int {
 	var cycle int
