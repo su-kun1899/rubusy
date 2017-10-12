@@ -7,6 +7,26 @@ import (
 	"time"
 )
 
+func TestReadCrontabFile(t *testing.T) {
+	// setup
+	dir, _ := os.Getwd()
+	filename := dir + "/crontab_example"
+	expected := []CronJob{
+		Parse("15 9 * * * /tmp/hoge.sh"),
+		Parse("10 10 * * * /tmp/fuga.sh"),
+		Parse("10 10 * 12 * /tmp/fuga.sh"),
+		Parse("10 10 3 10 * /tmp/fuga.sh"),
+	}
+
+	// execute
+	actual := readCrontabFile(filename)
+
+	// assert
+	if !reflect.DeepEqual(actual, expected) {
+		t.Fatalf("expected: %v but actual: %v\n", expected, actual)
+	}
+}
+
 func TestReadCrontabFile_crontab_example(t *testing.T) {
 	// setup
 	dir, _ := os.Getwd()

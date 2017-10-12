@@ -37,6 +37,27 @@ func main() {
 	app.Run(os.Args)
 }
 
+func readCrontabFile(fileName string) []CronJob {
+	// TODO ファイルの存在チェック
+	fp, err := os.Open(fileName)
+	if err != nil {
+		panic(err)
+	}
+	defer fp.Close()
+
+	jobs := make([]CronJob, 0)
+	scanner := bufio.NewScanner(fp)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		jobs = append(jobs, Parse(line))
+	}
+
+	return jobs
+}
+
 // 実行されるcronの検索範囲を保持する構造体
 type targetTime struct {
 	from time.Time
