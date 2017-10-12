@@ -20,8 +20,8 @@ var dayOfMonthRange = newCronRange(1, 31)
 var monthRange = newCronRange(1, 12)
 var dayOfWeekRange = newCronRange(0, 7)
 
-// NewCronJob creates CronJob from crontab line
-func NewCronJob(job string) CronJob {
+// Parse creates CronJob from crontab line
+func Parse(job string) CronJob {
 	splited := strings.Split(job, " ")
 	minuteBlock := splited[0]
 	hourBlock := splited[1]
@@ -32,11 +32,11 @@ func NewCronJob(job string) CronJob {
 	// TODO 曜日は文字列表現の場合がある mon,tue,etc..
 
 	return CronJob{
-		minute:     parse(minuteBlock, minutesRange),
-		hour:       parse(hourBlock, hourRange),
-		dayOfMonth: parse(dayOfMonthBlock, dayOfMonthRange),
-		month:      parse(monthBlock, monthRange),
-		dayOfWeek:  parse(dayOfWeekBlock, dayOfWeekRange),
+		minute:     parseBlock(minuteBlock, minutesRange),
+		hour:       parseBlock(hourBlock, hourRange),
+		dayOfMonth: parseBlock(dayOfMonthBlock, dayOfMonthRange),
+		month:      parseBlock(monthBlock, monthRange),
+		dayOfWeek:  parseBlock(dayOfWeekBlock, dayOfWeekRange),
 		line:       job,
 	}
 }
@@ -57,7 +57,7 @@ func newCronRange(from int, to int) CronRange {
 	return r
 }
 
-func parse(block string, maxRange CronRange) []int {
+func parseBlock(block string, maxRange CronRange) []int {
 	var cycle int
 	if strings.Contains(block, "/") {
 		splited := strings.Split(block, "/")
