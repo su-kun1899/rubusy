@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// CronJob はcrontabの一行を表す
 type CronJob struct {
 	minute     []int
 	hour       []int
@@ -41,14 +42,14 @@ func Parse(job string) CronJob {
 	}
 }
 
-type CronRange struct {
+type cronRange struct {
 	from int
 	to   int
 	all  []int
 }
 
-func newCronRange(from int, to int) CronRange {
-	r := CronRange{from: from, to: to}
+func newCronRange(from int, to int) cronRange {
+	r := cronRange{from: from, to: to}
 	all := make([]int, 0, r.to-r.from+1)
 	for index := r.from; index <= r.to; index++ {
 		all = append(all, index)
@@ -57,7 +58,7 @@ func newCronRange(from int, to int) CronRange {
 	return r
 }
 
-func parseBlock(block string, maxRange CronRange) []int {
+func parseBlock(block string, maxRange cronRange) []int {
 	var cycle int
 	if strings.Contains(block, "/") {
 		splited := strings.Split(block, "/")
