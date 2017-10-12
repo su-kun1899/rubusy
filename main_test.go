@@ -10,7 +10,7 @@ import (
 func TestReadCrontabFile(t *testing.T) {
 	// setup
 	dir, _ := os.Getwd()
-	filename := dir + "/crontab_example"
+	filename := dir + "/crontab_test"
 	expected := []CronJob{
 		Parse("15 9 * * * /tmp/hoge.sh"),
 		Parse("10 20 * * * /tmp/fuga.sh"),

@@ -17,7 +17,6 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		fileName := c.Args().Get(0)
 		timeCondition := newTargetTime(time.Now())
-		fmt.Println("----------------------------------------------")
 		fmt.Println(timeCondition)
 		fmt.Println("==============================================")
 
@@ -42,8 +41,6 @@ func main() {
 				cond = cond.Add(time.Duration(1) * time.Minute)
 			}
 		}
-
-		fmt.Println("----------------------------------------------")
 
 		return nil
 	}
