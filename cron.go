@@ -16,14 +16,9 @@ type CronJob struct {
 	next       time.Time
 }
 
-func monthInt(t time.Time) (int, error) {
-	monthInt, err := strconv.Atoi(t.Format("1"))
-	return monthInt, err
-}
-
 func (job *CronJob) match(cond time.Time) (bool, *CronJob) {
 	// TODO 曜日の対応が別途必要
-	monthInt, _ := monthInt(cond)
+	monthInt, _ := strconv.Atoi(cond.Format("1"))
 	if contains(monthInt, job.month) &&
 		contains(cond.Hour(), job.hour) &&
 		contains(cond.Day(), job.dayOfMonth) &&
