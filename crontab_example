@@ -1,5 +1,5 @@
 # ignore comment line
 15 9 * * * /tmp/hoge.sh
-10 10 * * * /tmp/fuga.sh
+10 20 * * * /tmp/fuga.sh
 10 10 * 12 * /tmp/fuga.sh
 10 10 3 10 * /tmp/fuga.sh

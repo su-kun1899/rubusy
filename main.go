@@ -25,11 +25,14 @@ func main() {
 			return nil
 		}
 
+		cond := Condition{from: timeCondition.from, to: timeCondition.to}
 		for _, job := range jobs {
-			// TODO 次回実行時間を表示
-			fmt.Printf("%s\n", job.line)
+			ok, job := job.match(cond)
+			if ok {
+				fmt.Printf("Next: %v, %s\n", job.next, job.line)
+			}
 		}
-		fmt.Printf("Probably %d cron tasks will run.\n", len(jobs))
+		//fmt.Printf("Probably %d cron tasks will run.\n", len(jobs))
 
 		return nil
 	}
