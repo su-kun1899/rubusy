@@ -9,3 +9,7 @@ type CronJob struct {
 	dayOfWeek  []int
 	line       string
 }
+
+func (job *CronJob) match(t targetTime) (bool, *CronJob) {
+	return true, job
+}
