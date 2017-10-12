@@ -11,10 +11,7 @@ func TestMatch(t *testing.T) {
 		Parse("15 18 * * * /tmp/hoge.sh"),
 		Parse("*/5 * * * * /tmp/hoge.sh"),
 	}
-	condition := Condition{
-		from: time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
-		to:   time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
-	}
+	condition := time.Date(2017, 10, 4, 18, 15, 0, 0, time.UTC)
 
 	for _, expected := range jobs {
 		contains, actual := expected.match(condition)
@@ -31,10 +28,7 @@ func TestUnMatch(t *testing.T) {
 	jobs := []CronJob{
 		Parse("1 19 4 10 * /tmp/hoge.sh"),
 	}
-	condition := Condition{
-		from: time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
-		to:   time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
-	}
+	condition := time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC)
 
 	for _, expected := range jobs {
 		contains, actual := expected.match(condition)
@@ -47,19 +41,19 @@ func TestUnMatch(t *testing.T) {
 	}
 }
 
-func TestNext(t *testing.T) {
-	job := Parse("15 18 * * * /tmp/hoge.sh")
-	condition := Condition{
-		from: time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
-		to:   time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
-	}
-	expected := time.Date(2017, 10, 4, 18, 15, 0, 0, time.UTC)
+// func TestNext(t *testing.T) {
+// 	job := Parse("15 18 * * * /tmp/hoge.sh")
+// 	condition := Condition{
+// 		from: time.Date(2017, 10, 4, 18, 0, 0, 0, time.UTC),
+// 		to:   time.Date(2017, 10, 4, 19, 0, 0, 0, time.UTC),
+// 	}
+// 	expected := time.Date(2017, 10, 4, 18, 15, 0, 0, time.UTC)
 
-	contains, actual := job.match(condition)
-	if !contains {
-		t.Fatalf("This job should be match: %+v \n", job)
-	}
-	if expected != actual.next {
-		t.Fatalf("expected: %+v but actual: %+v\n", expected, actual.next)
-	}
-}
+// 	contains, actual := job.match(condition)
+// 	if !contains {
+// 		t.Fatalf("This job should be match: %+v \n", job)
+// 	}
+// 	if expected != actual.next {
+// 		t.Fatalf("expected: %+v but actual: %+v\n", expected, actual.next)
+// 	}
+// }

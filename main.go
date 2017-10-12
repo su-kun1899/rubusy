@@ -25,14 +25,20 @@ func main() {
 			return nil
 		}
 
-		cond := Condition{from: timeCondition.from, to: timeCondition.to}
 		for _, job := range jobs {
-			ok, job := job.match(cond)
-			if ok {
-				fmt.Printf("Next: %v, %s\n", job.next, job.line)
+			from := timeCondition.from
+			to := timeCondition.to
+			cond := from
+			for cond.Before(to) {
+				ok, job := job.match(cond)
+				if ok {
+					job.next = cond
+					fmt.Printf("Next: %v, %s\n", job.next, job.line)
+					break
+				}
+				cond = cond.Add(time.Duration(1) * time.Minute)
 			}
 		}
-		//fmt.Printf("Probably %d cron tasks will run.\n", len(jobs))
 
 		return nil
 	}

@@ -13,7 +13,7 @@ func TestReadCrontabFile(t *testing.T) {
 	filename := dir + "/crontab_example"
 	expected := []CronJob{
 		Parse("15 9 * * * /tmp/hoge.sh"),
-		Parse("10 10 * * * /tmp/fuga.sh"),
+		Parse("10 20 * * * /tmp/fuga.sh"),
 		Parse("10 10 * 12 * /tmp/fuga.sh"),
 		Parse("10 10 3 10 * /tmp/fuga.sh"),
 	}
