@@ -48,7 +48,7 @@ func TestStringTargetTime(t *testing.T) {
 		time.Date(1985, 1, 7, 7, 7, 5, 0, time.UTC),
 		time.Date(2017, 10, 3, 17, 18, 9, 0, time.UTC),
 	}
-	expected := "from: 1985-01-07 07:07:05, to: 2017-10-03 17:18:09"
+	expected := "from: 1985/01/07 07:07 - to: 2017/10/03 17:18"
 	actual := target.String()
 
 	if actual != expected {
