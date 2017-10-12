@@ -5,16 +5,6 @@ import (
 	"strings"
 )
 
-// CronJob はcrontabの一行を表す
-type CronJob struct {
-	minute     []int
-	hour       []int
-	dayOfMonth []int
-	month      []int
-	dayOfWeek  []int
-	line       string
-}
-
 var minutesRange = newCronRange(0, 59)
 var hourRange = newCronRange(0, 23)
 var dayOfMonthRange = newCronRange(1, 31)
