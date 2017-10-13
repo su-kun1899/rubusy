@@ -33,7 +33,6 @@ func main() {
 			return nil
 		}
 
-		// TODO 切り出してテスト書こう
 		for _, job := range jobs {
 			from := timeCondition.from
 			to := timeCondition.to
