@@ -11,6 +11,10 @@ func TestParse(t *testing.T) {
 		{line: "3-6 12-14 3-5 10-12 2-4 /tmp/hoge.sh", minute: []int{3, 4, 5, 6}, hour: []int{12, 13, 14}, dayOfMonth: []int{3, 4, 5}, month: []int{10, 11, 12}, dayOfWeek: []int{2, 3, 4}},
 		{line: "3-6/2 17-20/2 3-5/2 10-12/2 1-3/2 /tmp/hoge.sh", minute: []int{3, 5}, hour: []int{17, 19}, dayOfMonth: []int{3, 5}, month: []int{10, 12}, dayOfWeek: []int{1, 3}},
 		{line: "3-6/2 17-20/2 3-5/2 10-12/2 0/3 /tmp/hoge.sh", minute: []int{3, 5}, hour: []int{17, 19}, dayOfMonth: []int{3, 5}, month: []int{10, 12}, dayOfWeek: []int{0, 3, 6}},
+		{line: "* * * * tue /tmp/hoge.sh", minute: minutesRange.all, hour: hourRange.all, dayOfMonth: dayOfMonthRange.all, month: monthRange.all, dayOfWeek: []int{2}},
+		{line: "* * * * sun-sat /tmp/hoge.sh", minute: minutesRange.all, hour: hourRange.all, dayOfMonth: dayOfMonthRange.all, month: monthRange.all, dayOfWeek: []int{0, 1, 2, 3, 4, 5, 6}},
+		{line: "* * * * mon,wed,thu /tmp/hoge.sh", minute: minutesRange.all, hour: hourRange.all, dayOfMonth: dayOfMonthRange.all, month: monthRange.all, dayOfWeek: []int{1, 3, 4}},
+		{line: "* * * * fri-sun /tmp/hoge.sh", minute: minutesRange.all, hour: hourRange.all, dayOfMonth: dayOfMonthRange.all, month: monthRange.all, dayOfWeek: []int{5, 6, 7}},
 	}
 
 	for _, expected := range jobs {
