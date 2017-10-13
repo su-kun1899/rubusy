@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -21,7 +22,9 @@ func Parse(job string) CronJob {
 	monthBlock := splited[3]
 	dayOfWeekBlock := splited[4]
 
-	// TODO 曜日は文字列表現の場合がある mon,tue,etc..
+	// 曜日は文字列表現の場合がある mon,tue,etc..
+	// 範囲指定の日曜終わりは順序が崩壊するので、先に最大値として処理する
+	dayOfWeekBlock = strings.Replace(dayOfWeekBlock, "-sun", "-7", 1)
 	for s, i := range dayOfWeekMap {
 		dayOfWeekBlock = strings.Replace(dayOfWeekBlock, s, fmt.Sprint(i), -1)
 	}
@@ -76,6 +79,10 @@ func parseBlock(block string, maxRange cronRange) []int {
 		splited := strings.Split(block, "-")
 		start, _ := strconv.Atoi(splited[0])
 		end, _ := strconv.Atoi(splited[1])
+		// FIXME toよりfromの方が大きいとエラーになる。。cronとしての書式チェックまで用意しないとだめ？
+		if start > end {
+			panic(errors.New("exists illegal format crontab"))
+		}
 		blockRange = newCronRange(start, end).all
 
 	} else {

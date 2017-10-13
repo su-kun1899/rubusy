@@ -14,7 +14,7 @@ func TestParse(t *testing.T) {
 		{line: "* * * * tue /tmp/hoge.sh", minute: minutesRange.all, hour: hourRange.all, dayOfMonth: dayOfMonthRange.all, month: monthRange.all, dayOfWeek: []int{2}},
 		{line: "* * * * sun-sat /tmp/hoge.sh", minute: minutesRange.all, hour: hourRange.all, dayOfMonth: dayOfMonthRange.all, month: monthRange.all, dayOfWeek: []int{0, 1, 2, 3, 4, 5, 6}},
 		{line: "* * * * mon,wed,thu /tmp/hoge.sh", minute: minutesRange.all, hour: hourRange.all, dayOfMonth: dayOfMonthRange.all, month: monthRange.all, dayOfWeek: []int{1, 3, 4}},
-		// {line: "* * * * fri-sun /tmp/hoge.sh", minute: minutesRange.all, hour: hourRange.all, dayOfMonth: dayOfMonthRange.all, month: monthRange.all, dayOfWeek: []int{5, 6, 7}},
+		{line: "* * * * fri-sun /tmp/hoge.sh", minute: minutesRange.all, hour: hourRange.all, dayOfMonth: dayOfMonthRange.all, month: monthRange.all, dayOfWeek: []int{5, 6, 7}},
 	}
 
 	for _, expected := range jobs {
