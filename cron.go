@@ -17,11 +17,22 @@ type CronJob struct {
 }
 
 func (job *CronJob) match(cond time.Time) (bool, *CronJob) {
-	// TODO 曜日の対応が別途必要
+	// 月をintに変換
 	monthInt, _ := strconv.Atoi(cond.Format("1"))
+
+	// 曜日をintに変換
+	weekday := cond.Format("Mon")
+	weekdayInt := weekDayMap[weekday]
+	weekDayMatch := contains(weekdayInt, job.dayOfWeek) || weekday == "Sun"
+	if !weekDayMatch && weekday == "Sun" {
+		// 日曜日は7の場合もある
+		weekdayInt = 7
+		weekDayMatch = contains(weekdayInt, job.dayOfWeek)
+	}
+
 	if contains(monthInt, job.month) &&
 		contains(cond.Hour(), job.hour) &&
-		contains(cond.Day(), job.dayOfMonth) &&
+		(contains(cond.Day(), job.dayOfMonth) || weekDayMatch) &&
 		contains(cond.Minute(), job.minute) {
 
 		return true, job
@@ -39,6 +50,7 @@ func contains(num int, slice []int) bool {
 	return false
 }
 
+// dayOfWeekMap はcrontabの曜日をintに変換する用
 var dayOfWeekMap = map[string]int{
 	"sun": 0,
 	"mon": 1,
@@ -49,13 +61,13 @@ var dayOfWeekMap = map[string]int{
 	"sat": 6,
 }
 
-// var dayOfWeekMap = map[int]string{
-// 	0: "sun",
-// 	1: "mon",
-// 	2: "tue",
-// 	3: "wed",
-// 	4: "thu",
-// 	5: "fri",
-// 	6: "sat",
-// 	7: "sun",
-// }
+// weekDayMap はtime.Dateの曜日をintに変換する用
+var weekDayMap = map[string]int{
+	"Sun": 0,
+	"Mon": 1,
+	"Tue": 2,
+	"Wed": 3,
+	"Thu": 4,
+	"Fri": 5,
+	"Sat": 6,
+}
