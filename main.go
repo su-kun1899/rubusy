@@ -15,6 +15,7 @@ func main() {
 	app.Name = "rubusy"
 	app.Usage = "tell you which cron will be executed."
 	app.Action = func(c *cli.Context) error {
+		// TODO validation的なこと
 		fileName := c.Args().Get(0)
 		timeCondition := newTargetTime(time.Now())
 		fmt.Println(timeCondition)
