@@ -17,7 +17,13 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		// TODO validation的なこと
 		fileName := c.Args().Get(0)
-		timeCondition := newTargetTime(time.Now())
+
+		// 検索範囲
+		t := time.Now()
+		timeCondition := searchRange{
+			from: t,
+			to:   t.Add(time.Duration(24*365) * time.Hour),
+		}
 		fmt.Println(timeCondition)
 		fmt.Println("==============================================")
 
@@ -27,7 +33,6 @@ func main() {
 			return nil
 		}
 
-		// TODO 切り出してテスト書こう
 		for _, job := range jobs {
 			from := timeCondition.from
 			to := timeCondition.to
@@ -71,20 +76,12 @@ func readCrontabFile(fileName string) []CronJob {
 }
 
 // 実行されるcronの検索範囲を保持する構造体
-type targetTime struct {
+type searchRange struct {
 	from time.Time
 	to   time.Time
 }
 
-func (target targetTime) String() string {
+func (s searchRange) String() string {
 	const format = "2006/01/02 15:04"
-	return fmt.Sprintf("from: %s - to: %s", target.from.Format(format), target.to.Format(format))
-}
-
-func newTargetTime(t time.Time) targetTime {
-	const format = "2006/01/02 15:04:05"
-	from := t
-	to := t.Add(time.Duration(1) * time.Hour)
-	// return fmt.Sprintf("target time from: %q to: %q", from.Format(format), to.Format(format))
-	return targetTime{from, to}
+	return fmt.Sprintf("from: %s - to: %s", s.from.Format(format), s.to.Format(format))
 }

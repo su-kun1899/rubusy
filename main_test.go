@@ -27,24 +27,8 @@ func TestReadCrontabFile(t *testing.T) {
 	}
 }
 
-func TestNewTargetTime_1985_01_07_07_07_00(t *testing.T) {
-	// setup
-	param := time.Date(1985, 1, 7, 7, 7, 0, 0, time.UTC)
-	expectedFrom := param
-	expectedTo := time.Date(1985, 1, 7, 8, 7, 0, 0, time.UTC)
-	expected := targetTime{expectedFrom, expectedTo}
-
-	// execute
-	actual := newTargetTime(param)
-
-	// asert
-	if actual != expected {
-		t.Fatalf("expected: %q but actual: %q\n", expected, actual)
-	}
-}
-
-func TestStringTargetTime(t *testing.T) {
-	target := targetTime{
+func TestSearchRange(t *testing.T) {
+	target := searchRange{
 		time.Date(1985, 1, 7, 7, 7, 5, 0, time.UTC),
 		time.Date(2017, 10, 3, 17, 18, 9, 0, time.UTC),
 	}
