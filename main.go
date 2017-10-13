@@ -86,10 +86,3 @@ func (target targetTime) String() string {
 	const format = "2006/01/02 15:04"
 	return fmt.Sprintf("from: %s - to: %s", target.from.Format(format), target.to.Format(format))
 }
-
-func newTargetTime(t time.Time) targetTime {
-	from := t
-	to := t.Add(time.Duration(1) * time.Hour)
-	// return fmt.Sprintf("target time from: %q to: %q", from.Format(format), to.Format(format))
-	return targetTime{from, to}
-}
