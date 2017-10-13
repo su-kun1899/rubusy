@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -21,6 +22,9 @@ func Parse(job string) CronJob {
 	dayOfWeekBlock := splited[4]
 
 	// TODO 曜日は文字列表現の場合がある mon,tue,etc..
+	for s, i := range dayOfWeekMap {
+		dayOfWeekBlock = strings.Replace(dayOfWeekBlock, s, fmt.Sprint(i), -1)
+	}
 
 	return CronJob{
 		minute:     parseBlock(minuteBlock, minutesRange),
