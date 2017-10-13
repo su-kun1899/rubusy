@@ -17,7 +17,13 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		// TODO validation的なこと
 		fileName := c.Args().Get(0)
-		timeCondition := newTargetTime(time.Now())
+
+		// 検索範囲
+		t := time.Now()
+		timeCondition := targetTime{
+			from: t,
+			to:   t.Add(time.Duration(24*365) * time.Hour),
+		}
 		fmt.Println(timeCondition)
 		fmt.Println("==============================================")
 
