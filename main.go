@@ -20,7 +20,7 @@ func main() {
 
 		// 検索範囲
 		t := time.Now()
-		timeCondition := targetTime{
+		timeCondition := searchRange{
 			from: t,
 			to:   t.Add(time.Duration(24*365) * time.Hour),
 		}
@@ -77,12 +77,12 @@ func readCrontabFile(fileName string) []CronJob {
 }
 
 // 実行されるcronの検索範囲を保持する構造体
-type targetTime struct {
+type searchRange struct {
 	from time.Time
 	to   time.Time
 }
 
-func (target targetTime) String() string {
+func (s searchRange) String() string {
 	const format = "2006/01/02 15:04"
-	return fmt.Sprintf("from: %s - to: %s", target.from.Format(format), target.to.Format(format))
+	return fmt.Sprintf("from: %s - to: %s", s.from.Format(format), s.to.Format(format))
 }

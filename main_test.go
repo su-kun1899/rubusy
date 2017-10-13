@@ -27,8 +27,8 @@ func TestReadCrontabFile(t *testing.T) {
 	}
 }
 
-func TestStringTargetTime(t *testing.T) {
-	target := targetTime{
+func TestSearchRange(t *testing.T) {
+	target := searchRange{
 		time.Date(1985, 1, 7, 7, 7, 5, 0, time.UTC),
 		time.Date(2017, 10, 3, 17, 18, 9, 0, time.UTC),
 	}
