@@ -14,9 +14,16 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "rubusy"
 	app.Usage = "tell you which cron will be executed."
+	app.Version = "0.0.1"
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:  "line, l",
+			Usage: "crontab one line",
+		},
+	}
 	app.Action = func(c *cli.Context) error {
+
 		// TODO validation的なこと
-		fileName := c.Args().Get(0)
 
 		// 検索範囲
 		t := time.Now()
@@ -27,7 +34,16 @@ func main() {
 		fmt.Println(timeCondition)
 		fmt.Println("==============================================")
 
-		jobs := readCrontabFile(fileName)
+		var jobs []CronJob
+		// TODO ファイル名もJobも未指定の場合、エラー
+		targetJob := c.String("line")
+		if targetJob != "" {
+			jobs = []CronJob{Parse(targetJob)}
+		} else {
+			fileName := c.Args().Get(0)
+			jobs = readCrontabFile(fileName)
+		}
+
 		if len(jobs) == 0 {
 			fmt.Println("Probably nothing to do. no cron tasks.")
 			return nil
