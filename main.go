@@ -14,11 +14,16 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "rubusy"
 	app.Usage = "tell you which cron will be executed."
+	//app.UsageText = "hogefugapiyo"
 	app.Version = "0.0.1"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "line, l",
 			Usage: "crontab one line",
+		},
+		cli.StringFlag{
+			Name:  "from, fr",
+			Usage: "crontab schedule search. format should be 2006-01-02-15-04",
 		},
 	}
 	app.Action = func(c *cli.Context) error {
@@ -27,6 +32,13 @@ func main() {
 
 		// 検索範囲
 		t := time.Now()
+		str := c.String("from")
+		if str != "" {
+			const layout = "2006-01-02-15-04"
+			// TODO 時刻変換に失敗したらエラー
+			t, _ = time.Parse(layout, str)
+		}
+
 		timeCondition := searchRange{
 			from: t,
 			to:   t.Add(time.Duration(24*365) * time.Hour),
