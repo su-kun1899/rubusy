@@ -4,3 +4,4 @@
 10 10 * 12 * /tmp/fuga2.sh
 * * * * * /tmp/fuga3.sh
 * 10 3 10 * /tmp/fuga4.sh
+15 6 24 * * /tmp/piyo.sh

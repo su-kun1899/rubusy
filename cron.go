@@ -7,13 +7,14 @@ import (
 
 // CronJob はcrontabの一行を表す
 type CronJob struct {
-	minute     []int
-	hour       []int
-	dayOfMonth []int
-	month      []int
-	dayOfWeek  []int
-	line       string
-	next       time.Time
+	minute       []int
+	hour         []int
+	dayOfMonth   []int
+	month        []int
+	dayOfWeek    []int
+	line         string
+	schedule     time.Time
+	dayOfWeekFlg bool
 }
 
 func (job *CronJob) match(cond time.Time) (bool, *CronJob) {
@@ -32,8 +33,10 @@ func (job *CronJob) match(cond time.Time) (bool, *CronJob) {
 
 	if contains(monthInt, job.month) &&
 		contains(cond.Hour(), job.hour) &&
-		(contains(cond.Day(), job.dayOfMonth) || weekDayMatch) &&
+		// 日付と曜日が両方指定されている場合は、どちらかが満たされた場合両方でコマンドが実行される
+		(contains(cond.Day(), job.dayOfMonth) || (job.dayOfWeekFlg && weekDayMatch)) &&
 		contains(cond.Minute(), job.minute) {
+		job.schedule = cond
 
 		return true, job
 	}

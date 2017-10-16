@@ -40,8 +40,7 @@ func main() {
 			for cond.Before(to) {
 				ok, job := job.match(cond)
 				if ok {
-					job.next = cond
-					fmt.Printf("%v : %s\n", job.next.Format("2006/1/2 15:04"), job.line)
+					fmt.Printf("%v : %s\n", job.schedule.Format("2006/1/2 15:04"), job.line)
 					break
 				}
 				cond = cond.Add(time.Duration(1) * time.Minute)

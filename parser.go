@@ -30,12 +30,13 @@ func Parse(job string) CronJob {
 	}
 
 	return CronJob{
-		minute:     parseBlock(minuteBlock, minutesRange),
-		hour:       parseBlock(hourBlock, hourRange),
-		dayOfMonth: parseBlock(dayOfMonthBlock, dayOfMonthRange),
-		month:      parseBlock(monthBlock, monthRange),
-		dayOfWeek:  parseBlock(dayOfWeekBlock, dayOfWeekRange),
-		line:       job,
+		minute:       parseBlock(minuteBlock, minutesRange),
+		hour:         parseBlock(hourBlock, hourRange),
+		dayOfMonth:   parseBlock(dayOfMonthBlock, dayOfMonthRange),
+		month:        parseBlock(monthBlock, monthRange),
+		dayOfWeek:    parseBlock(dayOfWeekBlock, dayOfWeekRange),
+		line:         job,
+		dayOfWeekFlg: dayOfWeekBlock != "*",
 	}
 }
 
