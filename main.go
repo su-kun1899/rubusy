@@ -25,6 +25,10 @@ func main() {
 			Name:  "from, fr",
 			Usage: "crontab schedule search. format should be 2006-01-02-15-04",
 		},
+		cli.BoolFlag{
+			Name:  "plain,p",
+			Usage: "disable header",
+		},
 	}
 	app.Action = func(c *cli.Context) error {
 
@@ -43,8 +47,12 @@ func main() {
 			from: t,
 			to:   t.Add(time.Duration(24*365) * time.Hour),
 		}
-		fmt.Println(timeCondition)
-		fmt.Println("==============================================")
+
+		plain := c.Bool("plain")
+		if !plain {
+			fmt.Println(timeCondition)
+			fmt.Println("==============================================")
+		}
 
 		var jobs []CronJob
 		// TODO ファイル名もJobも未指定の場合、エラー
