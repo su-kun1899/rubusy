@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -80,10 +79,6 @@ func parseBlock(block string, maxRange cronRange) []int {
 		splited := strings.Split(block, "-")
 		start, _ := strconv.Atoi(splited[0])
 		end, _ := strconv.Atoi(splited[1])
-		// FIXME toよりfromの方が大きいとエラーになる。。cronとしての書式チェックまで用意しないとだめ？
-		if start > end {
-			panic(errors.New("exists illegal format crontab"))
-		}
 		blockRange = newCronRange(start, end).all
 
 	} else {
