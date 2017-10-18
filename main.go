@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -61,7 +62,11 @@ func main() {
 			jobs = []CronJob{Parse(targetJob)}
 		} else {
 			fileName := c.Args().Get(0)
-			jobs = readCrontabFile(fileName)
+			var err error
+			jobs, err = readCrontabFile(fileName)
+			if err != nil {
+				return cli.NewExitError("read crontab failed", 1)
+			}
 		}
 
 		if len(jobs) == 0 {
@@ -89,11 +94,17 @@ func main() {
 	app.Run(os.Args)
 }
 
-func readCrontabFile(fileName string) []CronJob {
-	// TODO ファイルの存在チェック
+// ErrCrontabFile はcrontabファイルが不正だった場合に発生するエラー
+var ErrCrontabFile = errors.New("crontab file is something wrong")
+
+func readCrontabFile(fileName string) ([]CronJob, error) {
+	_, err := os.Stat(fileName)
+	if err != nil {
+		return nil, ErrCrontabFile
+	}
 	fp, err := os.Open(fileName)
 	if err != nil {
-		panic(err)
+		return nil, ErrCrontabFile
 	}
 	defer fp.Close()
 
@@ -107,7 +118,7 @@ func readCrontabFile(fileName string) []CronJob {
 		jobs = append(jobs, Parse(line))
 	}
 
-	return jobs
+	return jobs, nil
 }
 
 // 実行されるcronの検索範囲を保持する構造体
