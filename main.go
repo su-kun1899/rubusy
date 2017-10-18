@@ -41,7 +41,11 @@ func main() {
 		if str != "" {
 			const layout = "2006-01-02-15-04"
 			// TODO 時刻変換に失敗したらエラー
-			t, _ = time.Parse(layout, str)
+			var err error
+			t, err = time.Parse(layout, str)
+			if err != nil {
+				return cli.NewExitError("error: from format is something wrong", 1)
+			}
 		}
 
 		timeCondition := searchRange{
