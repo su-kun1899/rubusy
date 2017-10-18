@@ -19,11 +19,24 @@ func TestReadCrontabFile(t *testing.T) {
 	}
 
 	// execute
-	actual := readCrontabFile(filename)
+	actual, _ := readCrontabFile(filename)
 
 	// assert
 	if !reflect.DeepEqual(actual, expected) {
 		t.Fatalf("expected: %v but actual: %v\n", expected, actual)
+	}
+}
+
+func TestReadCrontabFile_error(t *testing.T) {
+	// setup
+	filename := "un_existing_file_name"
+
+	// execute
+	_, err := readCrontabFile(filename)
+
+	// assert
+	if err != ErrCrontabFile {
+		t.Error("ファイルが存在しない場合、ErrCrontabFileを返すべきです")
 	}
 }
 
