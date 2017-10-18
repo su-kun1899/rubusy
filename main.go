@@ -65,7 +65,7 @@ func main() {
 			var err error
 			jobs, err = readCrontabFile(fileName)
 			if err != nil {
-				return cli.NewExitError("read crontab failed", 1)
+				return cli.NewExitError("read crontab file failed", 1)
 			}
 		}
 
