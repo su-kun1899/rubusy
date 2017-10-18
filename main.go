@@ -32,15 +32,12 @@ func main() {
 		},
 	}
 	app.Action = func(c *cli.Context) error {
-
-		// TODO validation的なこと
-
 		// 検索範囲
 		t := time.Now()
 		str := c.String("from")
 		if str != "" {
 			const layout = "2006-01-02-15-04"
-			// TODO 時刻変換に失敗したらエラー
+			// 時刻変換に失敗したらエラー
 			var err error
 			t, err = time.Parse(layout, str)
 			if err != nil {
@@ -60,8 +57,7 @@ func main() {
 		}
 
 		var jobs []CronJob
-		// TODO ファイル名もJobも未指定の場合、エラー
-		targetJob := c.String("line")
+		targetJob := c.String("job")
 		if targetJob != "" {
 			jobs = []CronJob{Parse(targetJob)}
 		} else {
