@@ -124,7 +124,10 @@ func readCrontabFile(fileName string) ([]CronJob, error) {
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
-		job, _ := Parse(line)
+		job, err := Parse(line)
+		if err != nil {
+			return nil, ErrParseJob
+		}
 		jobs = append(jobs, job)
 	}
 

@@ -27,7 +27,7 @@ func TestReadCrontabFile(t *testing.T) {
 	}
 }
 
-func TestReadCrontabFile_error(t *testing.T) {
+func TestReadCrontabFile_file_error(t *testing.T) {
 	// setup
 	filename := "un_existing_file_name"
 
@@ -37,6 +37,20 @@ func TestReadCrontabFile_error(t *testing.T) {
 	// assert
 	if err != ErrCrontabFile {
 		t.Error("ファイルが存在しない場合、ErrCrontabFileを返すべきです")
+	}
+}
+
+func TestReadCrontabFile_parse_error(t *testing.T) {
+	// setup
+	dir, _ := os.Getwd()
+	filename := dir + "/crontab_error"
+
+	// execute
+	_, err := readCrontabFile(filename)
+
+	// assert
+	if err != ErrParseJob {
+		t.Error("ファイルにParseできない行が含まれている場合、ErrParseJobを返すべきです")
 	}
 }
 
