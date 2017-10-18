@@ -71,6 +71,9 @@ func main() {
 			var err error
 			jobs, err = readCrontabFile(fileName)
 			if err != nil {
+				if err == ErrParseJob {
+					return cli.NewExitError("error: cron format is something wrong.", 1)
+				}
 				return cli.NewExitError("error: read crontab file failed", 1)
 			}
 		}
