@@ -59,7 +59,13 @@ func main() {
 		var jobs []CronJob
 		targetJob := c.String("job")
 		if targetJob != "" {
-			jobs = []CronJob{Parse(targetJob)}
+			var err error
+			job, err := Parse(targetJob)
+			if err != nil {
+				return cli.NewExitError("error: cron format is something wrong.", 1)
+			}
+			jobs = []CronJob{job}
+
 		} else {
 			fileName := c.Args().Get(0)
 			var err error
@@ -97,6 +103,9 @@ func main() {
 // ErrCrontabFile はcrontabファイルが不正だった場合に発生するエラー
 var ErrCrontabFile = errors.New("crontab file is something wrong")
 
+// ErrParseJob はcronのフォーマットが不正だった場合に発生するエラー
+var ErrParseJob = errors.New("cron format is something wrong")
+
 func readCrontabFile(fileName string) ([]CronJob, error) {
 	_, err := os.Stat(fileName)
 	if err != nil {
@@ -115,7 +124,8 @@ func readCrontabFile(fileName string) ([]CronJob, error) {
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
-		jobs = append(jobs, Parse(line))
+		job, _ := Parse(line)
+		jobs = append(jobs, job)
 	}
 
 	return jobs, nil

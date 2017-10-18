@@ -13,7 +13,14 @@ var monthRange = newCronRange(1, 12)
 var dayOfWeekRange = newCronRange(0, 7)
 
 // Parse creates CronJob from crontab line
-func Parse(job string) CronJob {
+func Parse(job string) (j CronJob, e error) {
+	defer func() {
+		if err := recover(); err != nil {
+			// FIXME 書式チェックをしてRecoverは辞めるべき
+			e = ErrParseJob
+		}
+	}()
+
 	splited := strings.Split(job, " ")
 	minuteBlock := splited[0]
 	hourBlock := splited[1]
@@ -36,7 +43,7 @@ func Parse(job string) CronJob {
 		dayOfWeek:    parseBlock(dayOfWeekBlock, dayOfWeekRange),
 		line:         job,
 		dayOfWeekFlg: dayOfWeekBlock != "*",
-	}
+	}, nil
 }
 
 type cronRange struct {
