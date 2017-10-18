@@ -18,10 +18,24 @@ func TestParse(t *testing.T) {
 	}
 
 	for _, expected := range jobs {
-		actual := Parse(expected.line)
+		actual, _ := Parse(expected.line)
 
 		if !reflect.DeepEqual(actual, expected) {
 			t.Fatalf("expected: %+v but actual: %+v\n", expected, actual)
+		}
+	}
+}
+
+func TestParse_error(t *testing.T) {
+	jobs := []string{
+		"hoge",
+	}
+
+	for _, job := range jobs {
+		_, err := Parse(job)
+
+		if err != ErrParseJob {
+			t.Error("Parseに失敗した場合、ErrParseJobを返すべきです")
 		}
 	}
 }

@@ -12,10 +12,10 @@ func TestReadCrontabFile(t *testing.T) {
 	dir, _ := os.Getwd()
 	filename := dir + "/crontab_test"
 	expected := []CronJob{
-		Parse("15 9 * * * /tmp/hoge.sh"),
-		Parse("10 20 * * * /tmp/fuga.sh"),
-		Parse("10 10 * 12 * /tmp/fuga.sh"),
-		Parse("10 10 3 10 * /tmp/fuga.sh"),
+		parseForTest("15 9 * * * /tmp/hoge.sh"),
+		parseForTest("10 20 * * * /tmp/fuga.sh"),
+		parseForTest("10 10 * 12 * /tmp/fuga.sh"),
+		parseForTest("10 10 3 10 * /tmp/fuga.sh"),
 	}
 
 	// execute
@@ -27,7 +27,7 @@ func TestReadCrontabFile(t *testing.T) {
 	}
 }
 
-func TestReadCrontabFile_error(t *testing.T) {
+func TestReadCrontabFile_file_error(t *testing.T) {
 	// setup
 	filename := "un_existing_file_name"
 
@@ -37,6 +37,20 @@ func TestReadCrontabFile_error(t *testing.T) {
 	// assert
 	if err != ErrCrontabFile {
 		t.Error("ファイルが存在しない場合、ErrCrontabFileを返すべきです")
+	}
+}
+
+func TestReadCrontabFile_parse_error(t *testing.T) {
+	// setup
+	dir, _ := os.Getwd()
+	filename := dir + "/crontab_error"
+
+	// execute
+	_, err := readCrontabFile(filename)
+
+	// assert
+	if err != ErrParseJob {
+		t.Error("ファイルにParseできない行が含まれている場合、ErrParseJobを返すべきです")
 	}
 }
 
